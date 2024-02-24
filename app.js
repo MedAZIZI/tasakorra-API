@@ -11,6 +11,7 @@ const pool = new Pool({
   database: 'koyebdb',
   password: 'ENnY1QXI9cmr',
   port: 5432, // Port par défaut de PostgreSQL
+  ssl: { rejectUnauthorized: false }
 });
 app.get('/', (req, res) => {
   res.json({
@@ -23,7 +24,7 @@ app.get('/', (req, res) => {
 app.get('/offre', async (req, res) => {
   try {
     // Exécutez une requête SQL pour sélectionner toutes les offres
-    const { rows } = await pool.query('SELECT * FROM offres');
+    const { rows } = await pool.query('SELECT * FROM offres;');
     res.json(rows); // Envoyer les données récupérées en tant que réponse JSON
   } catch (error) {
     console.error('Erreur lors de la récupération des données:', error);
