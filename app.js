@@ -66,8 +66,9 @@ app.get('/insert', async (req, res) => {
 });
 
 
+
 // Route pour supprimer une offre par son ID
-app.delete('/offers/:id', (req, res) => {
+app.get('/offers/:id', (req, res) => {
   const { id } = req.params;
   // Supprimer l'offre correspondante de votre source de données (base de données, tableau, etc.)
   // Remplacer cette partie avec la logique spécifique de votre application
