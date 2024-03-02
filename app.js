@@ -3,7 +3,11 @@ const cors = require('cors');
 const { Pool } = require('pg');
 
 const app = express();
+
 app.use(cors());
+// app.use(cors({
+//   origin: 'http://localhost:5173'
+// }));
 
 const port = process.env.PORT || 3000;
 
@@ -23,6 +27,9 @@ const pool = new Pool({
   port: 5432, // Port par défaut de PostgreSQL
   ssl: { rejectUnauthorized: false }
 });
+
+
+// Définition de la route / pour récupérer les données de la table "offres"
 app.get('/', (req, res) => {
   res.json({
     Title: 'Tasakorra',
@@ -30,6 +37,8 @@ app.get('/', (req, res) => {
     Date: Date.now(),
   })
 })
+
+
 // Définition de la route /offre pour récupérer les données de la table "offres"
 app.get('/offre', async (req, res) => {
   try {
@@ -55,21 +64,19 @@ app.get('/insert', async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la récupération des données' });
   }
 });
-// app.get('/insert', async (req, res) => {
-//   try {
-//     // const { data } = req.body; // Assuming the incoming data is in the "data" field of the request body
 
-//     // Perform the database insertion
-//     //const result = await pool.query('INSERT INTO your_table (column1, column2, ...) VALUES ($1, $2, ...)', [data.field1, data.field2, ...]);
-//     const {result} = await pool.query("INSERT INTO offres (titre, duree, description, tarifs, location, contact, remarque)  VALUES   ('Offre 1', '1 mois', 'Description de l\'offre 1', 100.00, 'Paris', 'contact@exemple.com', 'Remarque pour l\'offre 1');");
-    
-//     res.json({ success: true, message: 'Data inserted successfully' });
-//   } catch (error) {
-//     console.error('Error inserting data:', error);
-//     res.status(500).json({ success: false, message: 'Failed to insert data' });
-//   }
-// });
-//
+
+// Route pour supprimer une offre par son ID
+app.delete('/offers/:id', (req, res) => {
+  const { id } = req.params;
+  // Supprimer l'offre correspondante de votre source de données (base de données, tableau, etc.)
+  // Remplacer cette partie avec la logique spécifique de votre application
+  // Exemple: database.deleteOffer(id);
+  console.log(`Offre supprimée avec l'ID ${id}`);
+  res.status(200).send('Offre supprimée avec succès');
+});
+
+
 // Démarrage du serveur
 app.listen(port, () => {
   console.log(`App écoute sur le port ${port}`);
