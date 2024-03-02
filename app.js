@@ -65,17 +65,28 @@ app.get('/insert', async (req, res) => {
   }
 });
 
+// Définition de la route DELETE /offre/:id pour supprimer une offre par son ID
+app.delete('/deloffre/:id', async (req, res) => {
+  const offreId = req.params.id;
 
-
-// Route pour supprimer une offre par son ID
-app.get('/offers/:id', (req, res) => {
-  const { id } = req.params;
-  // Supprimer l'offre correspondante de votre source de données (base de données, tableau, etc.)
-  // Remplacer cette partie avec la logique spécifique de votre application
-  // Exemple: database.deleteOffer(id);
-  console.log(`Offre supprimée avec l'ID ${id}`);
-  res.status(200).send('Offre supprimée avec succès');
+  try {
+    // Exécutez une requête SQL pour supprimer l'offre avec l'ID spécifié
+    const result = await pool.query('DELETE FROM offres WHERE id = $1', [offreId]);
+    
+    // Vérifiez si une ligne a été supprimée
+    if (result.rowCount === 1) {
+      res.status(200).json({ message: 'L\'offre a été supprimée avec succès' });
+    } else {
+      res.status(404).json({ message: 'Aucune offre avec cet ID n\'a été trouvée' });
+    }
+  } catch (error) {
+    console.error('Erreur lors de la suppression de l\'offre :', error);
+    res.status(500).json({ message: 'Erreur lors de la suppression de l\'offre' });
+  }
 });
+
+
+
 
 
 // Démarrage du serveur
