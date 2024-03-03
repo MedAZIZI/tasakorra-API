@@ -53,6 +53,7 @@ app.get('/offre', async (req, res) => {
   }
 });
 
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -76,7 +77,7 @@ app.post('/AddOffre', async (req, res) => {
 
 
 
-// Définition de la route DELETE /offre/:id pour supprimer une offre par son ID
+// Définition de la route DELETE /deloffre/:id pour supprimer une offre par son ID
 app.delete('/deloffre/:id', async (req, res) => {
   const offreId = req.params.id;
 
@@ -114,6 +115,19 @@ app.post('/contact', async (req, res) => {
     res.status(500).send('Erreur lors de l\'insertion du contact');
   }
 });
+
+// _____________________  Admin  _____________________________
+app.get('/admin', async (req, res) => {
+  try {
+    // Exécutez une requête SQL pour sélectionner toutes les offres
+    const { rows } = await pool.query('SELECT * FROM tassadmin;');
+    res.json(rows); 
+  } catch (error) {
+    console.error('Erreur lors de la récupération des données:', error);
+    res.status(500).json({ message: 'Erreur lors de la récupération des données' });
+  }
+});
+
 
 // Démarrage du serveur
 app.listen(port, () => {
