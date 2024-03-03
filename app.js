@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
+const bodyParser = require('body-parser');
 
 const app = express();
 
@@ -51,17 +52,24 @@ app.get('/offre', async (req, res) => {
   }
 });
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/insert', async (req, res) => {
+// Route pour insérer une nouvelle offre dans la base de données
+app.post('/AddOffre', async (req, res) => {
+  console.log(req.body);
+ 
+  const { titre, duree, description, tarifs, location,contact,  remarque } = req.body;
   try {
-    // Exécutez une requête SQL pour sélectionner toutes les offres
-    // const { rows } = await pool.query('SELECT * FROM offres;');
-    const {rows} = await pool.query("INSERT INTO offres (titre, duree, description, tarifs, location, contact, remarque)  VALUES   ('Offre 1', '1 mois', 'Description de l offre 1', 100.00, 'Paris', 'contact@exemple.com', 'Remarque pour l offre 1');");
+    const query = 'INSERT INTO offres (titre, duree, description, tarifs, location, contact, remarque) VALUES ($1, $2, $3, $4, $5, $6, $7)';
+    const values = [titre, duree, description, tarifs, location, contact, remarque];
+    await pool.query(query, values);
 
-    res.json(rows); // Envoyer les données récupérées en tant que réponse JSON
+    console.log('Nouvelle offre insérée avec succès');
+    res.status(200).send('Nouvelle offre insérée avec succès');
   } catch (error) {
-    console.error('Erreur lors de la récupération des données:', error);
-    res.status(500).json({ message: 'Erreur lors de la récupération des données' });
+    console.error('Erreur lors de l\'insertion de l\'offre :', error);
+    res.status(500).send('Erreur lors de l\'insertion de l\'offre');
   }
 });
 
