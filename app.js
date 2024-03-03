@@ -39,6 +39,7 @@ app.get('/', (req, res) => {
   })
 })
 
+// _____________________  OFFRES  _____________________________
 
 // Définition de la route /offre pour récupérer les données de la table "offres"
 app.get('/offre', async (req, res) => {
@@ -73,6 +74,8 @@ app.post('/AddOffre', async (req, res) => {
   }
 });
 
+
+
 // Définition de la route DELETE /offre/:id pour supprimer une offre par son ID
 app.delete('/deloffre/:id', async (req, res) => {
   const offreId = req.params.id;
@@ -93,9 +96,24 @@ app.delete('/deloffre/:id', async (req, res) => {
   }
 });
 
+// _____________________  CONTACT  _____________________________
 
+app.post('/contact', async (req, res) => {
+  console.log(req.body);
+ 
+  const { nom , numTel , email , object , message } = req.body;
+  try {
+    const query = 'INSERT INTO contact (Nom , NumTel , Email , Object , Message ) VALUES ($1, $2, $3, $4, $5)';
+    const values = [nom , numTel , email , object , message];
+    await pool.query(query, values);
 
-
+    console.log('Nouvelle contact insérée avec succès');
+    res.status(200).send('Nouvelle contact insérée avec succès');
+  } catch (error) {
+    console.error('Erreur lors de l\'insertion du contact :', error);
+    res.status(500).send('Erreur lors de l\'insertion du contact');
+  }
+});
 
 // Démarrage du serveur
 app.listen(port, () => {
